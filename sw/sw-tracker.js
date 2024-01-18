@@ -1,6 +1,6 @@
 console.log("service worker tracker");
 
-let activeTabId, lastUrl, lastDomain;
+let activeTabId, lastUrl, lastDomain, lastTitle;
 
 function getTabInfo(tabId) {
   chrome.tabs.get(tabId, function (tab) {
@@ -9,6 +9,14 @@ function getTabInfo(tabId) {
         (lastUrl = tab.url),
         (lastDomain = new URL(tab.url).hostname)
       );
+
+    chrome.runtime.sendNativeMessage(
+      "com.epsi.timetracker",
+      { domain: lastDomain },
+      function (response) {
+        console.log("Received " + response);
+      }
+    );
   });
 }
 

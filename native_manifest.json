@@ -1,0 +1,8 @@
+{
+    "name": "com.epsi.timetracker",
+    "description": "Example host for native messaging",
+    "path": "path to native file",
+    "type": "stdio",
+    "allowed_origins": ["chrome-extension://bbjamcpinoecnkiicbjgjdokpcppgfma/"]
+  }
+  
