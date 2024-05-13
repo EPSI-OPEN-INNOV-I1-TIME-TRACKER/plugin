@@ -1,5 +1,7 @@
 console.log("service worker tracker");
 
+const API_URL = "";
+
 let activeTabId, lastUrl, lastDomain, lastTitle;
 
 function getTabInfo(tabId) {
@@ -10,6 +12,7 @@ function getTabInfo(tabId) {
         (lastDomain = new URL(tab.url).hostname)
       );
 
+    /*
     chrome.runtime.sendNativeMessage(
       "com.epsi.timetracker",
       { domain: lastDomain },
@@ -17,6 +20,20 @@ function getTabInfo(tabId) {
         console.log("Received " + response);
       }
     );
+    */
+
+    const data = {
+      lastUrl: lastUrl,
+      lastDomain: lastDomain,
+    };
+
+    fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
   });
 }
 
