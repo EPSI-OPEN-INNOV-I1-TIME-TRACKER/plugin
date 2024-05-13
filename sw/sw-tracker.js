@@ -1,6 +1,13 @@
 console.log("service worker tracker");
+const socket = new WebSocket("ws://127.0.0.1:3030/ws");
 
-const socket = new WebSocket("ws://localhost:3030/ws");
+socket.onopen = function (e) {
+  console.log("Connection established! Ready to send data.");
+};
+
+socket.onerror = function (error) {
+  console.error(`WebSocket Error: ${error}`);
+};
 
 let activeTabId, lastUrl, lastDomain, lastTitle;
 
@@ -12,14 +19,17 @@ function getTabInfo(tabId) {
         (lastDomain = new URL(tab.url).hostname)
       );
 
-    const data = JSON.stringify({
-      lastUrl: lastUrl,
-      lastDomain: lastDomain,
-    });
+    if (socket.readyState === WebSocket.OPEN) {
+      const data = JSON.stringify({
+        lastUrl: lastUrl,
+        lastDomain: lastDomain,
+      });
 
-    socket.send(data);
+      socket.send(data);
+    }
   });
 }
+
 
 chrome.tabs.onActivated.addListener(function (activeInfo) {
   getTabInfo((activeTabId = activeInfo.tabId));
