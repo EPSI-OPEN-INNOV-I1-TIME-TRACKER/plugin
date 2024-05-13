@@ -1,6 +1,6 @@
 console.log("service worker tracker");
 
-const API_URL = "";
+const socket = new WebSocket("ws://localhost:3030/ws");
 
 let activeTabId, lastUrl, lastDomain, lastTitle;
 
@@ -12,28 +12,12 @@ function getTabInfo(tabId) {
         (lastDomain = new URL(tab.url).hostname)
       );
 
-    /*
-    chrome.runtime.sendNativeMessage(
-      "com.epsi.timetracker",
-      { domain: lastDomain },
-      function (response) {
-        console.log("Received " + response);
-      }
-    );
-    */
-
-    const data = {
+    const data = JSON.stringify({
       lastUrl: lastUrl,
       lastDomain: lastDomain,
-    };
-
-    fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
     });
+
+    socket.send(data);
   });
 }
 
